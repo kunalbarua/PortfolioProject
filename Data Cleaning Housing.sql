@@ -178,7 +178,8 @@ SET SoldAsVacant
 
 -- (TASK 5) Remove Duplicates
 
-WITH RowNumCTE AS(
+--Creating a virtual table for multilevel aggregation and to filter the data using WHERE clauseat the end of this (RowNumCTE) table
+WITH RowNumCTE AS(     
 Select *,
 	ROW_NUMBER() OVER (
 	PARTITION BY ParcelID,
@@ -191,13 +192,13 @@ Select *,
 					) row_num
 
 From PortfolioProject.dbo.NashvilleHousing
---order by ParcelID
 )
+
+--If we want to delete the duplicates, replace the clause SELECT * and uncomment DELETE clause
+--DELETE
 Select *
 From RowNumCTE
-Where row_num > 1
-Order by PropertyAddress
-
+Where row_num > 1 --Any row where "row_num" is > 1, will mean its a duplicate
 
 
 Select *
@@ -211,10 +212,9 @@ From PortfolioProject.dbo.NashvilleHousing
 -- (TASK 6) Delete Unused Columns
 
 
-
 Select *
 From PortfolioProject.dbo.NashvilleHousing
 
-
+--Deleting unimportant cloumns
 ALTER TABLE PortfolioProject.dbo.NashvilleHousing
 DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress, SaleDate
